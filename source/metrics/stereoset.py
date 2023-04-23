@@ -21,9 +21,9 @@ class Stereoset(Dataset):
 		self.tokenizer = tokenizer
 		self.blank_token = "BLANK"
 		self.data = []
-		self._get_dataset()
+		self._prepare_dataset()
 
-	def _get_dataset(self):
+	def _prepare_dataset(self):
 		for sample in self.stereoset_intrasentence:
 			if sample['bias_type'] == self.bias_type:
 				context = sample["context"]
@@ -196,7 +196,7 @@ if __name__ == '__main__':
 	model = transformers.BertForMaskedLM.from_pretrained('bert-base-cased')
 
 
-	evaluate_stereoset_intrasentence(model, "profession")
+	evaluate_stereoset_intrasentence(model)
 
 
 
