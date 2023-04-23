@@ -27,7 +27,7 @@ chmod +x prelaunch.sh  # Make sure that the script has execute permissions
 # Quick Start
 
 Preprocessing the data
-* Loads the dataset from huggingface (SNLI/MNLI) datasets
+* Loads the dataset from huggingface ([SNLI](https://huggingface.co/datasets/snli)/[MNLI](https://huggingface.co/datasets/multi_nli)) datasets
 * Loads word pairs based on the wordlist shared in the gn_glove repository
 * Augments the huggingface dataset with the word pairs. Refer to the [preprocessing example notebook](./source/preprocessing_example.ipynb) for more information on how to perform Counterfactual Data Augmentation
 

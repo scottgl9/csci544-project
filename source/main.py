@@ -49,7 +49,7 @@ def setup_cli():
 
 
 if __name__ == '__main__':
-    # args.func(**vars(args))
     cli = setup_cli()
     args = cli.parse_args()
-    print(args)
+    args.func(**vars(args))
+    # print(args)
