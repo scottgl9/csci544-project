@@ -43,10 +43,11 @@ class MABELBert(BertForPreTraining):
     _keys_to_ignore_on_load_missing = [r"position_ids"]
 
     def __init__(self, config: BertConfig, **model_kwargs):
-        super(MABELBert, self).__init__(config)
+        super().__init__(config)
         self.config = config
         model_args = model_kwargs.get('model_args')
-        self.encoder = BertModel(config, add_pooling_layer=False)
+        self.encoder = BertModel.from_pretrained(config._name_or_path,
+                                                 add_pooling_layer=False)
 
         self.masked_head = BertLMPredictionHead(config)
         self.pooler = Pooler()
@@ -140,6 +141,11 @@ class MABELBert(BertForPreTraining):
         og_z1 = self.pooler(og_z1_outputs)
         aug_z0 = self.pooler(aug_z0_outputs)
         aug_z1 = self.pooler(aug_z1_outputs)
+
+        og_z0 = self.mlp(og_z0)
+        og_z1 = self.mlp(og_z1)
+        aug_z0 = self.mlp(aug_z0)
+        aug_z1 = self.mlp(aug_z1)
 
         return og_z0, og_z1, aug_z0, aug_z1, mlm_outputs
 

@@ -6,6 +6,7 @@ from transformers import AutoConfig
 
 from models import MABELBert, training_objective
 from dataset import CDADataset, get_dataloaders
+from transformers import BertForPreTraining
 from config import (
     ModelArguments, TrainingArguments, DEVICE, DATASET_ROOT, CKPT_DIR
 )
@@ -119,7 +120,10 @@ def train(data_path, model_path):
     train_dataloader = get_dataloaders(dataset)
 
     # Define the model and optimizer
-    model = MABELBert(hf_config)
+    model = MABELBert.from_pretrained('bert-base-uncased')
+    ptm = BertForPreTraining.from_pretrained(ModelArguments.hf_model)
+    model.masked_head.load_state_dict(ptm.cls.predictions.state_dict())
+
     optimizer = Adam(model.parameters(), TrainingArguments.lr)
 
     # Training loop
