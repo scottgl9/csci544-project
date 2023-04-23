@@ -65,6 +65,10 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
         split=kwargs.get('split', 'train'),
         to_pandas=kwargs.get('to_pandas', True)
     )
+    # Filter only entailment pairs from the SNLI dataset
+    # Entailment pairs are labeled as 0
+    data_og = data_og[data_og.label == 0]
+
     logger.info('Loaded huggingface dataset')
     assert len(wl_paths) == 2, "Must provide exactly two word lists"
 
@@ -89,8 +93,13 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
         generate_cda_df, axis=1, result_type='expand', args=(word_pairs,)
     )
 
+    # Rename premise and hypothesis to orig_sent0, orig_sent1
+    data_og.rename(columns={'premise': 'orig_sent0',
+                            'hypothesis': 'orig_sent1'},
+                   inplace=True)
+
     # Write augmented data to CSV file
-    data_og.to_csv(out_file)
+    data_og.to_csv(out_file, index=False)
     logger.info(f'Augmented dataset stored at {out_file}')
 
     return data_og
