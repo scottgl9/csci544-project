@@ -1,7 +1,9 @@
-from torch.utils.data import Dataset, DataLoader
-from datasets import load_dataset
 import logging
 from tqdm import tqdm
+from datasets import load_dataset
+import torch
+from torch.utils.data import Dataset, DataLoader
+from transformers import BertForMaskedLM
 from config import LoggerConfig
 
 
@@ -103,6 +105,18 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
     logger.info(f'Augmented dataset stored at {out_file}')
 
     return data_og
+
+
+def convert_to_hf_model(model_path):
+    state_dict = torch.load(model_path)
+
+    lm_dict = {k: v for k, v in state_dict.items() if 'masked_head' in k}
+    new_dict ={}
+
+    for key in lm_dict.keys():
+        new_dict[key.replace("lm_head", "")] = lm_dict.pop(key)
+
+    pass
 
 
 if __name__ == '__main__':

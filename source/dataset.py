@@ -10,6 +10,7 @@ from config import ModelArguments, TrainingArguments
 class CDADataset(Dataset):
     def __init__(self, filepath):
         self.data = pd.read_csv(filepath)
+        self.data = self.data.iloc[:2000]
         self.tokenizer = AutoTokenizer.from_pretrained(ModelArguments.hf_model)
         self.columns = [
             "orig_sent0",
@@ -110,8 +111,9 @@ class MLMDataCollator:
                                      labels.shape, dtype=torch.long)
         inputs[indices_random] = random_words[indices_random]
 
-        return (inputs.view(self.batch_size, self.nums_sent, -1),
-                labels.view(self.batch_size, self.nums_sent, -1))
+        # return (inputs.view(self.batch_size, self.nums_sent, -1),
+        #         labels.view(self.batch_size, self.nums_sent, -1))
+        return inputs, labels
 
 
 def get_dataloaders(train_dataset, **kwargs):
