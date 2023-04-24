@@ -2,6 +2,10 @@
 
 This project is towards the course project for CSCI 544, USC.
 
+|              MABEL             |             BERT              |
+|:------------------------------:|:-----------------------------:|
+| ![](./assets/mabel-hf-out.png) | ![](./assets/bert-hf-out.png) |
+
 
 # Setup
 
