@@ -26,7 +26,8 @@ chmod +x prelaunch.sh  # Make sure that the script has execute permissions
 
 # Quick Start
 
-Preprocessing the data
+## Preprocessing the data
+
 * Loads the dataset from huggingface ([SNLI](https://huggingface.co/datasets/snli)/[MNLI](https://huggingface.co/datasets/multi_nli)) datasets
 * Loads word pairs based on the wordlist shared in the gn_glove repository
 * Augments the huggingface dataset with the word pairs. Refer to the [preprocessing example notebook](./source/preprocessing_example.ipynb) for more information on how to perform Counterfactual Data Augmentation
@@ -36,3 +37,27 @@ python main.py data_prep -d snli --wl-path data/wordlist/male_word_file.txt --wl
 ```
 
 The augmented dataset is stored in `source/data/data_aug.csv` by default.
+
+## Training the model
+
+```bash
+python main.py train -d data_aug.csv --ckpt-path mabel.pth
+```
+
+## Evaluating the model
+
+* To evaluate the model on StereoSet dataset
+
+```bash
+python main.py eval -i mabel_gcp.pth -d stereoset
+```
+
+* To evaluate the model on CrowS-Pairs dataset
+
+```bash
+python main.py eval -i mabel_gcp.pth -d crows
+```
+
+# Access the model on HuggingFace
+
+The Masked Language Model head of the model implemented in this project is available on huggingface at [adityaanulekh98/csci544-project-mabel](https://huggingface.co/adityaanulekh98/csci544-project-mabel)

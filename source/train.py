@@ -111,7 +111,7 @@ class Trainer:
         pass
 
 
-def train(data_path, model_path):
+def train(data_path, model_path, **kwargs):
     hf_config = AutoConfig.from_pretrained(ModelArguments.hf_model)
 
     # Setup dataset and dataloader

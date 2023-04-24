@@ -4,7 +4,7 @@ from utils import convert_to_hf_model
 from config import DEVICE
 
 
-def evaluate(ckpt_path, dataset):
+def evaluate(ckpt_path, dataset, **kwargs):
     model = convert_to_hf_model(ckpt_path)
     model = model.to(DEVICE)
     if dataset == "stereoset":
