@@ -11,6 +11,7 @@ class CDADataset(Dataset):
     def __init__(self, filepath):
         self.data = pd.read_csv(filepath)
         self.data = self.data.iloc[:2000]
+        self.data = self.data.dropna().reset_index(drop=True)
         self.tokenizer = AutoTokenizer.from_pretrained(ModelArguments.hf_model)
         self.columns = [
             "orig_sent0",

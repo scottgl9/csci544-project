@@ -1,8 +1,8 @@
-import os
-import sys
 import logging
 from argparse import ArgumentParser
 from utils import prepare_dataset
+from train import train
+from evaluate import evaluate
 from config import LoggerConfig, DATASET_ROOT
 
 
@@ -21,35 +21,50 @@ def setup_cli():
 
     # Subparser for dataset preprocessing
     subparsers = global_parser.add_subparsers(
-        title='preprocess', help='Dataset preprocessing'
+        title="preprocess", help="Dataset preprocessing"
     )
 
-    preprocess_parser = subparsers.add_parser('data_prep')
-    preprocess_parser.add_argument('--dataset-name', '-d',
-                                   default='snli',
-                                   help='Name of the huggingface dataset',
-                                   dest='dataset_name')
-    preprocess_parser.add_argument('--out-file', '-o',
-                                   default=f'{DATASET_ROOT}/data_aug.csv',
-                                   help='Path of the output file',
-                                   dest='out_file')
-    preprocess_parser.add_argument('--wl-path',
-                                   help='Path of the word lists. 2 required',
-                                   action='append',
-                                   dest='wl_paths')
+    preprocess_parser = subparsers.add_parser("data_prep")
+    preprocess_parser.add_argument("--dataset-name", "-d",
+                                   default="snli",
+                                   help="Name of the huggingface dataset",
+                                   dest="dataset_name")
+    preprocess_parser.add_argument("--out-file", "-o",
+                                   default=f"{DATASET_ROOT}/data_aug.csv",
+                                   help="Path of the output file",
+                                   dest="out_file")
+    preprocess_parser.add_argument("--wl-path",
+                                   help="Path of the word lists. 2 required",
+                                   action="append",
+                                   dest="wl_paths")
     preprocess_parser.set_defaults(func=prepare_dataset)
 
-    # TODO: Subparser for training
+    # Subparser for training
+    training_parser = subparsers.add_parser("train")
+    training_parser.add_argument("--data-path", "-d",
+                                 help="Path to the counterfactually augmented "
+                                      "dataset",
+                                 dest="data_path")
+    training_parser.add_argument("--ckpt-path", "-o",
+                                 help="Path to store the trained model file",
+                                 dest="model_path")
+    training_parser.set_defaults(func=train)
 
-    # TODO: Subparser for evaluation
-
-    # TODO: Subparser for inference
+    # Subparser for evaluation
+    eval_parser = subparsers.add_parser("eval")
+    eval_parser.add_argument("--ckpt-path", "-i",
+                             help="Path to the stored model",
+                             dest="ckpt_path")
+    eval_parser.add_argument("--dataset-name", "-d",
+                             help="Intrinsic metric evaluation. "
+                                  "Choose from [stereoset, crows]",
+                             dest="dataset")
+    eval_parser.set_defaults(func=evaluate)
 
     return global_parser
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli = setup_cli()
     args = cli.parse_args()
     args.func(**vars(args))
-    # print(args)

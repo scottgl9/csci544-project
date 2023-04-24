@@ -1,10 +1,12 @@
+import os
+import re
 import logging
 from tqdm import tqdm
 from datasets import load_dataset
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import BertForMaskedLM
-from config import LoggerConfig
+from config import LoggerConfig, CKPT_DIR
 
 
 # Set up logger
@@ -108,15 +110,30 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
 
 
 def convert_to_hf_model(model_path):
-    state_dict = torch.load(model_path)
+    model = BertForMaskedLM.from_pretrained('bert-base-uncased')
 
-    lm_dict = {k: v for k, v in state_dict.items() if 'masked_head' in k}
-    new_dict ={}
+    model_path = os.path.join(CKPT_DIR, model_path)
+    mabel_model = torch.load(model_path)
 
-    for key in lm_dict.keys():
-        new_dict[key.replace("lm_head", "")] = lm_dict.pop(key)
+    encoder_dict = {k: v for k, v in mabel_model.state_dict().items() if
+                    re.search('^encoder', k)}
 
-    pass
+    lm_dict = {k: v for k, v in mabel_model.state_dict().items() if
+               "masked_head" in k}
+
+    new_encoder_dict = {}
+    new_lm_dict = {}
+
+    for key in list(encoder_dict.keys()):
+        new_encoder_dict[re.sub(r"^encoder\.", "", key)] = encoder_dict.pop(key)
+
+    for key in list(lm_dict.keys()):
+        new_lm_dict[key.replace("masked_head.", "")] = lm_dict.pop(key)
+
+    model.bert.load_state_dict(new_encoder_dict)
+    model.cls.predictions.load_state_dict(new_lm_dict)
+
+    return model
 
 
 if __name__ == '__main__':
