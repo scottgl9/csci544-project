@@ -123,8 +123,8 @@ def evaluate_crows_pairs(
         score1, score2 = 0, 0
         for mask_idx in range(1, num_mask_tokens - 1):
             # print(mask_idx)
-            sent1_mask = sent1.clone().detach()
-            sent2_mask = sent2.clone().detach()
+            sent1_mask = sent1.clone().detach().to(device)
+            sent2_mask = sent2.clone().detach().to(device)
 
             sent1_mask[0][template1[mask_idx]] = tok_mask_id
             sent2_mask[0][template2[mask_idx]] = tok_mask_id

@@ -101,6 +101,9 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
     data_og.rename(columns={'premise': 'orig_sent0',
                             'hypothesis': 'orig_sent1'},
                    inplace=True)
+    
+    # data_og['aug_sent0'] = data_og['orig_sent0']
+    # data_og['aug_sent1'] = data_og['orig_sent1']
 
     # Write augmented data to CSV file
     data_og.to_csv(out_file, index=False)
@@ -130,7 +133,7 @@ def convert_to_hf_model(model_path):
     for key in list(lm_dict.keys()):
         new_lm_dict[key.replace("masked_head.", "")] = lm_dict.pop(key)
 
-    model.bert.load_state_dict(new_encoder_dict)
+    model.bert.load_state_dict(new_encoder_dict, strict=False)
     model.cls.predictions.load_state_dict(new_lm_dict)
 
     return model
