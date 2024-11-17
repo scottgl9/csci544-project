@@ -12,7 +12,7 @@ print(f"Using device: {device}")
 # Parameters
 MODEL_NAME = "bert-base-uncased"
 BATCH_SIZE = 64
-EPOCHS = 2
+EPOCHS = 1
 LEARNING_RATE = 2e-5
 OUTPUT_DIR = "./bert_snli_model.pth"
 
@@ -114,5 +114,5 @@ for epoch in range(EPOCHS):
 
 # Save the trained model
 print(f"Saving the trained model to {OUTPUT_DIR}...")
-torch.save(model.state_dict(), OUTPUT_DIR)
+torch.save(model, OUTPUT_DIR)
 print("Model saved!")
