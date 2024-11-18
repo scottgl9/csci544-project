@@ -111,6 +111,23 @@ def prepare_dataset(wl_paths, out_file, **kwargs):
 
     return data_og
 
+def prepare_dataset_base(out_file, **kwargs):
+    data = load_huggingface_dataset(
+        dataset_name=kwargs.get('dataset_name'),
+        split=kwargs.get('split', 'train'),
+        to_pandas=kwargs.get('to_pandas', True)
+    )
+    # Filter only entailment pairs from the SNLI dataset
+    # Entailment pairs are labeled as 0
+    data = data[data.label == 0]
+
+    logger.info('Loaded huggingface dataset')
+
+    # Write augmented data to CSV file
+    data.to_csv(out_file, index=False)
+    logger.info(f'Augmented dataset stored at {out_file}')
+
+    return data
 
 def convert_to_hf_model(model_path):
     model = BertForMaskedLM.from_pretrained('bert-base-uncased')
