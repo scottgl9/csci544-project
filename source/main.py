@@ -2,7 +2,7 @@ import logging
 from argparse import ArgumentParser
 from utils import prepare_dataset, prepare_dataset_base
 from train import train
-#from train_base import train_base
+from train_base import train_base
 from evaluate import evaluate
 from config import LoggerConfig, DATASET_ROOT
 
@@ -62,16 +62,16 @@ def setup_cli():
                                  dest="model_path")
     training_parser.set_defaults(func=train)
 
-#     # Subparser for training
-#     training_parser = subparsers.add_parser("train_base")
-#     training_parser.add_argument("--data-path", "-d",
-#                                  help="Path to the counterfactually augmented "
-#                                       "dataset",
-#                                  dest="data_path")
-#     training_parser.add_argument("--ckpt-path", "-o",
-#                                  help="Path to store the trained model file",
-#                                  dest="model_path")
-#     training_parser.set_defaults(func=train_base)
+    # Subparser for training
+    training_parser = subparsers.add_parser("train_base")
+    training_parser.add_argument("--data-path", "-d",
+                                 help="Path to the counterfactually augmented "
+                                      "dataset",
+                                 dest="data_path")
+    training_parser.add_argument("--ckpt-path", "-o",
+                                 help="Path to store the trained model file",
+                                 dest="model_path")
+    training_parser.set_defaults(func=train_base)
 
     # Subparser for evaluation
     eval_parser = subparsers.add_parser("eval")
