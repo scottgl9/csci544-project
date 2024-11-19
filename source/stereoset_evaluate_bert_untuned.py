@@ -192,7 +192,7 @@ def get_scores(pred_results):
 
 def evaluate_stereoset_intrasentence(
         model,
-        bias_type="all",
+        bias_type="gender",
         device="cpu"
 ):
     tokenizer = transformers.BertTokenizer.from_pretrained(

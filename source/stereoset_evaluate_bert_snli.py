@@ -193,7 +193,7 @@ def get_scores(pred_results):
 def evaluate_stereoset_intrasentence(
         model,
         tokenizer,
-        bias_type="all",
+        bias_type="gender",
         device="cpu"
 ):
     stereoset = Stereoset(tokenizer=tokenizer, bias_type=bias_type)
